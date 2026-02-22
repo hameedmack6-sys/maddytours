@@ -1,0 +1,525 @@
+<think>
+The user wants me to add a photographer section to the existing travel website. I need to:
+1. Add a new section for photographer services/booking
+2. Include photographer packages or options
+3. Make it fit with the existing design and color scheme
+4. Add relevant JavaScript functionality to handle photographer selection
+
+Let me create a comprehensive photographer section that integrates well with the existing website structure.
+
+</think>I'll add a comprehensive **Photographer Services** section to your travel website. This will include photo shoot packages, session types, and integration with the booking system.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderLust | Complete Travel & Booking Guide</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary: #006d77;
+            --secondary: #83c5be;
+            --accent: #e29578;
+            --light: #edf6f9;
+            --dark: #2d3436;
+            --gold: #d4af37;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--primary);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #d08060;
+        }
+
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--dark);
+        }
+
+        .btn-gold:hover {
+            background-color: #b8962e;
+        }
+
+        /* Sections General */
+        section {
+            padding: 4rem 10%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        /* Tour Plans */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .price {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .price-tag {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Hotels & Rooms */
+        .room-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .room-card {
+            background: white;
+            padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .room-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .room-card.selected {
+            border-color: var(--primary);
+            background-color: #e0f7fa;
+        }
+
+        /* Dining / Meals */
+        .meal-selector {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .meal-category {
+            margin-bottom: 20px;
+        }
+
+        .meal-category h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        /* ==================== PHOTOGRAPHER SECTION ==================== */
+        .photographer-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+        }
+
+        .photographer-section h2 {
+            color: var(--gold);
+        }
+
+        .photographer-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .photo-packages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .photo-card {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .photo-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-5px);
+        }
+
+        .photo-card.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .photo-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .photo-card h3 {
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .photo-card ul {
+            list-style: none;
+            text-align: left;
+            margin: 15px 0;
+            padding: 0;
+        }
+
+        .photo-card ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+        }
+
+        .photo-card ul li:before {
+            content: "✓";
+            color: var(--gold);
+            margin-right: 10px;
+        }
+
+        .photo-card .price {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-top: 15px;
+        }
+
+        /* Add-on Services */
+        .addons-section {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .addons-section h3 {
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .addon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .addon-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .addon-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .addon-item input {
+            margin-right: 15px;
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+
+        .addon-details h4 {
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .addon-details p {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        /* Photographer Portfolio Preview */
+        .portfolio-preview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .portfolio-preview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .portfolio-preview img:hover {
+            transform: scale(1.1);
+        }
+
+        /* ==================== END PHOTOGRAPHER SECTION ==================== */
+
+        /* Booking Form */
+        .booking-section {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .booking-section h2 {
+            color: white;
+        }
+
+        .booking-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .summary-box {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .summary-box h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .summary-item span:first-child {
+            color: #ccc;
+        }
+
+        .total-row {
+            border-top: 2px solid var(--gold);
+            margin-top: 15px;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .total-row span:last-child {
+            color: var(--gold);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .portfolio-preview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">WanderLust</div>
+        <div class="nav-links">
+            <a href="#plans">Tour Plans</a>
+            <a href="#hotels">Hotels</a>
+            <a href="#dining">Dining</a>
+            <a href="#photographer">Photography</a>
+            <a href="#book">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Explore the World with Us</h1>
+        <p>Curated tours, luxury rooms, gourmet meals, and professional photography.</p>
+        <br>
+        <a href="#plans" class="btn">Start Your Journey</a>
+    </div>
+
+    <!-- Tour Plans Section -->
+    <section id="plans">
+        <h2>Perfect Plans for Your Trip</h2>
+        <div class="plans-grid">
+            <!-- Plan 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Beach">
+                <div class="card-content">
+                    <h3>Sunset Beach Bliss</h3>
+                    <p>5 Days, 4 Nights. Includes surfing, beach dinner, and spa.</p>
+                    <p class="price">$1200 / Person</p>
+                    <button class="btn" onclick="selectPlan('Sunset Beach Bliss', 1200)">Select Plan</button>
+                </div>
+            </div>
+            <!-- Plan 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Mountain">
+                <div class="card-content">
+                    <h3>Mountain Trek Adventure</h
